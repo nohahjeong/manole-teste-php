@@ -63,6 +63,8 @@ test('retorna 422 quando o user_id não é informado', function () {
 test('retorna 404 quando o curso não existe', function () {
     $user = User::factory()->create();
 
-    $this->postJson('/api/courses/999/enrollments', ['user_id' => $user->id])
+    $inexistente = Course::max('id') + 1;
+
+    $this->postJson("/api/courses/{$inexistente}/enrollments", ['user_id' => $user->id])
         ->assertStatus(404);
 });
