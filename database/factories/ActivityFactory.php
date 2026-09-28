@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Activity;
+use App\Models\Course;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,14 @@ class ActivityFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'course_id' => Course::factory(),
+            'title' => fake()->sentence(3),
+            'is_required' => true,
         ];
+    }
+
+    public function optional(): static
+    {
+        return $this->state(fn () => ['is_required' => false]);
     }
 }
