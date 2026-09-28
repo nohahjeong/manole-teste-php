@@ -1,5 +1,8 @@
 <?php
 
+use App\Exceptions\DuplicateEnrollmentException;
+use App\Exceptions\InactiveCourseException;
+use App\Exceptions\InactiveUserException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,4 +21,16 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        $exceptions->render(fn (InactiveUserException $e) => response()->json(
+            ['message' => $e->getMessage()], 422,
+        ));
+
+        $exceptions->render(fn (InactiveCourseException $e) => response()->json(
+            ['message' => $e->getMessage()], 422,
+        ));
+
+        $exceptions->render(fn (DuplicateEnrollmentException $e) => response()->json(
+            ['message' => $e->getMessage()], 409,
+        ));
     })->create();
