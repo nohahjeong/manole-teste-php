@@ -1,6 +1,8 @@
 <?php
 
+use App\Exceptions\ActivityNotInCourseException;
 use App\Exceptions\DuplicateEnrollmentException;
+use App\Exceptions\EnrollmentNotFoundException;
 use App\Exceptions\InactiveCourseException;
 use App\Exceptions\InactiveUserException;
 use Illuminate\Foundation\Application;

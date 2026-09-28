@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\DuplicateEnrollmentException;
+use App\Exceptions\EnrollmentNotFoundException;
 use App\Exceptions\InactiveCourseException;
 use App\Exceptions\InactiveUserException;
 use App\Models\Course;
@@ -32,5 +33,13 @@ class EnrollmentService
             // Em duas requisições simultâneas, ambas passam pela validação e só uma é inserida.
             throw new DuplicateEnrollmentException;
         }
+    }
+
+    public function findFor(User $user, Course $course): Enrollment
+    {
+        return Enrollment::with('course')
+            ->where('user_id', $user->id)
+            ->where('course_id', $course->id)
+            ->first() ?? throw new EnrollmentNotFoundException;
     }
 }

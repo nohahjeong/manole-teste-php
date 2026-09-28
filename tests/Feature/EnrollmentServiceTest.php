@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\DuplicateEnrollmentException;
+use App\Exceptions\EnrollmentNotFoundException;
 use App\Exceptions\InactiveCourseException;
 use App\Exceptions\InactiveUserException;
 use App\Models\Course;
@@ -51,4 +52,17 @@ test('não matricula em curso inativo', function () {
 
     expect(fn () => $this->service->enroll($user, $course))
         ->toThrow(InactiveCourseException::class);
+});
+
+test('encontra a matrícula do usuário no curso', function () {
+    $user = User::factory()->create();
+    $course = Course::factory()->create();
+    $enrollment = $this->service->enroll($user, $course);
+
+    expect($this->service->findFor($user, $course)->id)->toBe($enrollment->id);
+});
+
+test('não encontra matrícula quando o usuário não está matriculado no curso', function () {
+    expect(fn () => $this->service->findFor(User::factory()->create(), Course::factory()->create()))
+        ->toThrow(EnrollmentNotFoundException::class);
 });
