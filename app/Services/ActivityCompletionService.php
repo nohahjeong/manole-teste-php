@@ -6,6 +6,7 @@ use App\Exceptions\ActivityNotInCourseException;
 use App\Models\Activity;
 use App\Models\ActivityCompletion;
 use App\Models\Enrollment;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\DB;
 
 class ActivityCompletionService
@@ -26,7 +27,13 @@ class ActivityCompletionService
 
             if (! $completion->exists) {
                 $completion->completed_at = now();
-                $completion->save();
+                try {
+                    $completion->save();
+                } catch (UniqueConstraintViolationException) {
+                    $completion = ActivityCompletion::where('enrollment_id', $enrollment->id)
+                        ->where('activity_id', $activity->id)
+                        ->firstOrFail();
+                }
             }
 
             if ($enrollment->completed_at === null && $this->progress->isComplete($enrollment)) {
