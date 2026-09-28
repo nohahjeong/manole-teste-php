@@ -33,4 +33,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(fn (DuplicateEnrollmentException $e) => response()->json(
             ['message' => $e->getMessage()], 409,
         ));
+
+        $exceptions->render(fn (ActivityNotInCourseException $e) => response()->json(
+            ['message' => $e->getMessage()], 422,
+        ));
+
+        $exceptions->render(fn (EnrollmentNotFoundException $e) => response()->json(
+            ['message' => $e->getMessage()], 404,
+        ));
     })->create();
