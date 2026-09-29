@@ -26,4 +26,18 @@ class StoreEnrollmentRequest extends FormRequest
             'user_id' => ['required', 'integer', 'exists:users,id'],
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'user_id.required' => 'O campo user_id é obrigatório.',
+            'user_id.integer' => 'O campo user_id deve ser um número inteiro.',
+            'user_id.exists' => 'Este usuário não existe.',
+        ];
+    }
 }
