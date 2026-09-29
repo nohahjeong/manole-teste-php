@@ -20,6 +20,11 @@ class ActivityCompletionService
         }
 
         return DB::transaction(function () use ($enrollment, $activity) {
+            // Trava a matrícula para serializar conclusões simultâneas. Sem isso, duas
+            // requisições concluindo as últimas obrigatórias não enxergam a inserção uma
+            // da outra e nenhuma das duas grava a data de conclusão.
+            $enrollment = Enrollment::whereKey($enrollment->getKey())->lockForUpdate()->firstOrFail();
+
             $completion = ActivityCompletion::firstOrNew([
                 'enrollment_id' => $enrollment->id,
                 'activity_id' => $activity->id,

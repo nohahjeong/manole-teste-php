@@ -169,7 +169,7 @@ Erros de domínio devolvem apenas `message`; erros de validação seguem o forma
 
 **`completed_at` não é mass assignable**, nem na matrícula nem na conclusão. A data é sempre definida pelo service. Se não fosse, `completed_at` no payload poderia gravar uma conclusão que não aconteceu.
 
-**A conclusão da atividade roda em transação.** O `complete()` grava a conclusão e, quando é a última obrigatória, também grava a data de conclusão da matrícula. As duas escritas acontecem em conjunto para evitar que a atividade fique concluída sem a data de conclusão na matrícula.
+**A conclusão da atividade roda em transação.** O `complete()` grava a conclusão e, quando é a última obrigatória, também grava a data de conclusão da matrícula. As duas escritas acontecem em conjunto para evitar que a atividade fique concluída sem a data de conclusão na matrícula. A matrícula também é travada com `lockForUpdate()` no início da transação: sem isso, duas requisições concluindo as últimas obrigatórias ao mesmo tempo contariam o progresso sem enxergar a inserção uma da outra, e nenhuma gravaria a data.
 
 **O progresso é contado no banco.** `ProgressService` usa `COUNT` em vez de carregar as atividades para contar na memória. Para uma leitura individual são poucas consultas indexadas; em uma listagem de matrículas isso viraria uma consulta por matrícula, e as contagens precisariam vir na mesma consulta da listagem (subselect ou join).
 
