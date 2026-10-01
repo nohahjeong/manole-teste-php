@@ -60,13 +60,17 @@ Em um banco novo, `php artisan migrate --seed` cria estes dados:
 |---|---|---|
 | 1 | Curso Ativo | Ativo |
 | 2 | Curso Inativo | Inativo |
+| 3 | Outro Curso | Ativo |
 
-**Atividades do curso 1**
+**Atividades**
 
-| IDs | Tipo |
-|---|---|
-| 1, 2, 3 | Obrigatórias |
-| 4, 5 | Opcionais |
+| IDs | Curso | Tipo |
+|---|---|---|
+| 1, 2, 3 | 1 | Obrigatórias |
+| 4, 5 | 1 | Opcionais |
+| 6 | 3 | Obrigatória |
+
+A atividade 6 permite testar a conclusão de uma atividade de outro curso: `POST /api/courses/1/activities/6/completion` com `{"user_id": 2}` devolve **422**.
 
 **Alunos**
 
@@ -75,6 +79,12 @@ Em um banco novo, `php artisan migrate --seed` cria estes dados:
 | 1 | Aluno Ativo | Ativo, sem matrícula |
 | 2 | Aluno Já Matriculado | Ativo, matriculado no curso 1 |
 | 3 | Aluno Inativo | Inativo |
+
+As requisições alteram esses dados (por exemplo, repetir a matrícula do exemplo abaixo devolve 409). Para voltar ao estado inicial:
+
+```bash
+php artisan migrate:fresh --seed
+```
 
 ## Endpoints
 
