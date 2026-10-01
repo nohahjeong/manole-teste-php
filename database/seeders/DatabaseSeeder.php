@@ -32,5 +32,8 @@ class DatabaseSeeder extends Seeder
         $userInactive = User::factory()->inactive()->create(['name' => 'Aluno Inativo']);
 
         Enrollment::factory()->for($userEnrolled)->for($courseActive)->create();
+
+        $courseNoRequired = Course::factory()->create(['title' => 'Curso Sem Obrigatórias']);
+        Activity::factory()->optional()->for($courseNoRequired)->create();       // só opcional
     }
 }

@@ -61,6 +61,7 @@ Em um banco novo, `php artisan migrate --seed` cria estes dados:
 | 1 | Curso Ativo | Ativo |
 | 2 | Curso Inativo | Inativo |
 | 3 | Outro Curso | Ativo |
+| 4 | Curso Sem Obrigatórias | Ativo |
 
 **Atividades**
 
@@ -69,8 +70,11 @@ Em um banco novo, `php artisan migrate --seed` cria estes dados:
 | 1, 2, 3 | 1 | Obrigatórias |
 | 4, 5 | 1 | Opcionais |
 | 6 | 3 | Obrigatória |
+| 7 | 4 | Opcional |
 
 A atividade 6 permite testar a conclusão de uma atividade de outro curso: `POST /api/courses/1/activities/6/completion` com `{"user_id": 2}` devolve **422**.
+
+O curso 4 permite testar o curso sem atividades obrigatórias: depois de matricular o usuário 1 e concluir a atividade 7, o progresso continua em 0% e `completed_at` em `null`.
 
 **Alunos**
 
